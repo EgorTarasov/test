@@ -21,4 +21,5 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('', views.index, name='index'),
     path('<int:container_id>', views.container_rent, name='view'),
+    path('return/<int:container_id>', views.container_return, name='return')
 ]

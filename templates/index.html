@@ -13,22 +13,23 @@
       </section>
     <div class="container" class="mx-auto">
     {% for each in containers %}
-            <div class="card bins" style="width: 25rem;display:inline-block" >
-              <div class="card-body">
-
+            <div class="card mb-4 box-shadow">
+                <div class="card-body">
                 <h3 class="card-title address" style="font-size:30px;">{{ each.container_name }}</h3>
                 <p class="card-text ">{{ each.ip_addres }}</p>
                   {% if each.field_status  %}
                   <p class="card-text data" style="color:red; font-size:25px;"> Арендованно пользователем: {{each.field_user}}</p>
-                  <a href="{{ each.id }}" class="btn btn-primary">Вернуть</a>
+                  <a href="{% url 'return' each.id %}" style=" font-size:20px;" class="btn butn btn-primary">Вернуть</a>
                   {% else %}
                   <p class="card-text data" style="color:lightgreen; font-size:25px;">Устройство можно арендовать </p>
-                  <a href="{{ each.id }}" class="btn btn-primary">Арендовать</a>
+                  <a href="{{ each.id }}" class="btn butn btn-primary" style=" font-size:20px;">Арендовать</a>
                   {% endif %}
 
               </div>
-            </div>
+</div>
     {% endfor %}
 
         </div>
 {% endblock %}
+
+

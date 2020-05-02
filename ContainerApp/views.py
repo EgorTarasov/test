@@ -1,5 +1,5 @@
 from django.contrib.auth.decorators import login_required
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from .models import Container
 from django.contrib.auth.forms import UserCreationForm
 from django.urls import reverse_lazy
@@ -24,20 +24,31 @@ def index(request):
 
 def container_rent(request, container_id):
     rent(container_id)
+    containers = Container.objects.get(pk=container_id)
+    containers.field_user = 'user1'
+    containers.field_status = 'True'
+    containers.save()
     containers = Container.objects.all()
-    containers[int(container_id) - 1].field_status = True
-    containers[int(container_id) - 1].field_user = 'User1'
-    containers[int(container_id) - 1].save()
     context = dict()
-
     context['containers'] = containers
-    return render(request, 'index.html', context)
+    return redirect('index')
 
-arduino = serial.Serial('/dev/ttyAMA0', 9600, timeout=1)
-arduino.open
+
+def container_return(request, container_id):
+    rent(container_id)
+    containers = Container.objects.get(pk=container_id)
+    containers.field_user = ''
+    containers.field_status = 'False'
+    containers.save()
+    containers = Container.objects.all()
+    context = dict()
+    context['containers'] = containers
+    return redirect('index')
 
 
 def rent(container_id):
+    arduino = serial.Serial('/dev/ttyAMA0', 9600, timeout=1)
+    arduino.open()
     arduino.write(b"h")
     time.sleep(10)
     arduino.write(b"b")
@@ -54,3 +65,5 @@ def rent(container_id):
         arduino.write(b"v")
     elif container_id == 3:
         arduino.write(b"b")
+
+    arduino.close()
